@@ -1,0 +1,49 @@
+COMO OBTENER KIRA.vst3 CON GITHUB (sin instalar nada, ~15 minutos)
+=================================================================
+Necesitas una cuenta gratuita de GitHub (github.com).
+
+PASO 1 - Crear el repositorio
+  - Arriba a la derecha: "+" > "New repository".
+  - Nombre: kira      Visibilidad: PUBLIC      > "Create repository".
+
+PASO 2 - Subir el codigo (SIN el workflow todavia)
+  - Descomprime este zip en una carpeta de tu PC.
+  - En la pagina del repositorio pulsa "uploading an existing file".
+  - Arrastra estas 3 cosas desde la carpeta descomprimida:
+        CMakeLists.txt
+        README.txt
+        la carpeta  Source   (arrastra la carpeta entera)
+  - Abajo pulsa "Commit changes".
+  - Comprueba que en la raiz del repositorio se ven CMakeLists.txt y Source.
+
+PASO 3 - Crear el workflow (esto arranca la compilacion)
+  - "Add file" > "Create new file".
+  - En el nombre escribe EXACTAMENTE:   .github/workflows/build-windows.yml
+    (al escribir cada "/" se crea una carpeta).
+  - Abre el archivo  PEGAR_EN_GITHUB.yml.txt  de este zip con el Bloc de notas,
+    copia TODO su contenido y pegalo en el cuadro grande.
+  - "Commit changes" (arriba a la derecha) > "Commit changes".
+
+PASO 4 - Esperar
+  - Pestana "Actions": veras "Build KIRA VST3 (Windows)" con un circulo amarillo.
+  - Tarda 5-15 minutos. Cuando salga una marca verde, esta listo.
+    (Si Actions pide permiso, pulsa el boton verde para habilitar los workflows.)
+
+PASO 5 - Descargar
+  - Vuelve a la pagina principal del repositorio ("Code").
+  - En la columna derecha pulsa "Releases" > la mas reciente > "Assets" >
+    KIRA-VST3-Windows.zip
+
+PASO 6 - Instalar en Ableton
+  - Descomprime el zip: obtienes la CARPETA  KIRA.vst3
+  - Copiala a:  C:\Program Files\Common Files\VST3
+  - Ableton: Preferencias > Plug-ins > activa "Use VST3 System Folders" y pulsa Rescan.
+  - Busca KIRA en la lista de plug-ins (pestana Plug-ins, VST3). Ponlo en una pista de voz.
+
+SI ALGO FALLA
+  - Marca roja en Actions: entra en la ejecucion > "build" > copia las ultimas lineas
+    rojas y mandamelas.
+  - No aparece "Build KIRA VST3" en Actions: el archivo del paso 3 no se creo con
+    el nombre exacto. Revisa que exista .github/workflows/build-windows.yml
+  - Si aparece una advertencia de SmartScreen/antivirus al abrir el plugin, es porque
+    no esta firmado digitalmente; es normal en plugins caseros.
