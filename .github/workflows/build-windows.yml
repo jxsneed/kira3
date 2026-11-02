@@ -1,0 +1,45 @@
+name: Build KIRA VST3 (Windows)
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -S . -G "Visual Studio 17 2022" -A x64
+
+      - name: Build VST3
+        run: cmake --build build --config Release --target KIRA_VST3 --parallel
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $src = Get-ChildItem -Path build -Recurse -Directory -Filter "KIRA.vst3" | Select-Object -First 1
+          if (-not $src) { throw "No se encontro KIRA.vst3" }
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item -Recurse $src.FullName "dist/KIRA.vst3"
+          Compress-Archive -Path "dist/KIRA.vst3" -DestinationPath "KIRA-VST3-Windows.zip" -Force
+          Get-ChildItem -Recurse dist | Select-Object -First 20 FullName
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KIRA-VST3-Windows
+          path: dist
+
+      - name: Publish release (descarga facil)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "build-${{ github.run_number }}-${{ github.run_attempt }}" KIRA-VST3-Windows.zip `
+            --title "KIRA VST3 - build ${{ github.run_number }}" `
+            --notes "Descomprime y copia la carpeta KIRA.vst3 a C:\Program Files\Common Files\VST3" `
+            --target "${{ github.sha }}"
